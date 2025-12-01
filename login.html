@@ -1,343 +1,263 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Login / Sign up | PB-MCQ</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <style>
-    body { font-family: 'Inter', sans-serif; margin:0; padding:0; min-height:100vh; color:#fff; }
-
-    /* Moving gradient background (slow wave) */
-    body {
-      background: linear-gradient(120deg, #050014, #2b0033, #00334d, #001a2b);
-      background-size: 400% 400%;
-      animation: gradientMove 18s ease infinite;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-    @keyframes gradientMove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    /* Card container */
-    #card {
-      width:100%;
-      max-width:460px;
-      padding:20px;
-      box-sizing:border-box;
-    }
-
-    /* panels styling - keep white cards for readability */
-    .panel {
-      background: rgba(255,255,255,0.06);
-      backdrop-filter: blur(6px);
-      border-radius:18px;
-      padding:22px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.45);
-      border: 1px solid rgba(255,255,255,0.06);
-    }
-
-    .panel .inner-white {
-      background: #ffffff;
-      color: #0b1220;
-      border-radius:12px;
-      padding:18px;
-    }
-
-    img.profile {
-      width:80px;
-      height:80px;
-      border-radius:999px;
-      object-fit:cover;
-      border:4px solid #0ea5a4; /* cyan-ish border */
-      display:block;
-      margin:0 auto 12px auto;
-    }
-
-    h2, h3 { margin:0 0 10px 0; }
-    .muted { color: rgba(255,255,255,0.75); }
-
-    input, textarea {
-      width:100%;
-      padding:12px;
-      border-radius:10px;
-      border:1px solid #e6e6e6;
-      outline:none;
-      box-sizing:border-box;
-    }
-
-    .link {
-      color:#7dd3fc;
-      cursor:pointer;
-      text-decoration:underline;
-    }
-
-    .btn {
-      display:inline-block;
-      width:100%;
-      padding:12px;
-      border-radius:10px;
-      border:none;
-      cursor:pointer;
-      font-weight:600;
-    }
-
-    .btn-primary { background:#0369a1; color:white; }
-    .btn-green { background:#059669; color:white; }
-
-    /* small responsive tweak */
-    @media (max-width:440px){
-      #card { padding:12px; }
-    }
-  </style>
-</head>
-<body>
-
-  <div id="card">
-
-    <!-- CHOICE (styled panel, inner white card) -->
-    <div id="choice-screen" class="panel">
-      <div class="inner-white text-center">
-        <img src="https://avatars.githubusercontent.com/u/175926715?s=400&u=1e6017276e80c1f8eaaceb1c483fcecd059cb88d&v=4" alt="avatar" class="profile">
-        <h2 class="text-2xl font-bold">Welcome to PB-MCQ</h2>
-        <p class="muted">Quick access — sign in or create your QB QUIZ account</p>
-        <div class="mt-6 flex gap-3">
-          <button id="toSignIn" class="btn btn-primary">Sign In</button>
-          <button id="toSignUp" class="btn btn-green">Sign Up</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- SIGN IN -->
-    <div id="signin-screen" class="panel hidden mt-4">
-      <div class="inner-white">
-        <h3 class="text-xl font-semibold">Login to QB Quiz</h3>
-        <p class="muted mb-3">Enter your registered email and password to continue.</p>
-
-        <input id="signin-email" type="email" placeholder="Email" class="mb-3" />
-        <input id="signin-password" type="password" placeholder="Password" class="mb-2" />
-        <p id="signin-msg" class="text-sm mt-2 text-red-500"></p>
-
-        <div class="mt-4 flex gap-2">
-          <button id="signin-btn" class="btn btn-primary">Sign In</button>
-          <button id="backFromSignin" class="btn" style="background:#f3f4f6;">Back</button>
-        </div>
-
-        <div class="mt-3 flex items-center justify-between text-sm">
-          <div>
-            <!-- Small link as requested -->
-            <span id="toSignupLink" class="link">Don't have account? Create Account</span>
-          </div>
-          <div>
-            <button id="forgotBtn" class="link">Forgot password?</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- SIGN UP -->
-    <div id="signup-screen" class="panel hidden mt-4">
-      <div class="inner-white">
-        <h3 class="text-xl font-semibold">Create new QB Quiz account</h3>
-        <p class="muted mb-3">Join now — create your account and start practicing MCQs.</p>
-
-        <input id="signup-name" type="text" placeholder="Full Name" class="mb-3" />
-        <input id="signup-email" type="email" placeholder="Email" class="mb-3" />
-        <input id="signup-password" type="password" placeholder="Password (min 6 chars)" class="mb-3" />
-
-        <button id="signup-btn" class="btn btn-green">Sign Up</button>
-
-        <p id="signup-msg" class="text-sm mt-3 text-red-500"></p>
-        <div class="mt-4">
-          <button id="backFromSignup" class="btn" style="background:#f3f4f6;">Back</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- FORGOT -->
-    <div id="forgot-screen" class="panel hidden mt-4">
-      <div class="inner-white">
-        <h3 class="text-xl font-semibold">Reset Password</h3>
-        <p class="muted mb-2">Enter your <strong>email</strong> or your <strong>User ID</strong> (example: PBMCQ-ABC123)</p>
-        <input id="forgot-input" type="text" placeholder="Email or User ID" class="mb-3" />
-        <p id="forgot-msg" class="text-sm mt-2 text-red-500"></p>
-
-        <div class="mt-4 flex gap-2">
-          <button id="send-reset" class="btn btn-primary">Send Reset Email</button>
-          <button id="backFromForgot" class="btn" style="background:#f3f4f6;">Back</button>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- Firebase + Firestore logic (kept exactly as in your original file) -->
-  <script type="module">
-    // ====== FIREBASE CONFIG ======
-    const firebaseConfig = {
-      apiKey: "AIzaSyAA9WGhpWt5rfBsN0rIThp_Vd9gwwJlJwY",
-      authDomain: "website-mcq-5d390.firebaseapp.com",
-      projectId: "website-mcq-5d390",
-      storageBucket: "website-mcq-5d390.firebasestorage.app",
-      messagingSenderId: "792788612285",
-      appId: "1:792788612285:web:34f17eede0307ee65233d4",
-      measurementId: "G-Q1ZXF235FM"
-    };
-
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-    import {
-      getAuth,
-      signInWithEmailAndPassword,
-      createUserWithEmailAndPassword,
-      sendPasswordResetEmail,
-      updateProfile,
-      onAuthStateChanged
-    } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-
-    import {
-      getFirestore, doc, setDoc, getDoc, serverTimestamp
-    } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    // DOM
-    const choiceScreen = document.getElementById("choice-screen");
-    const signinScreen = document.getElementById("signin-screen");
-    const signupScreen = document.getElementById("signup-screen");
-    const forgotScreen = document.getElementById("forgot-screen");
-
-    const toSignIn = document.getElementById("toSignIn");
-    const toSignUp = document.getElementById("toSignUp");
-    const backFromSignin = document.getElementById("backFromSignin");
-    const backFromSignup = document.getElementById("backFromSignup");
-    const backFromForgot = document.getElementById("backFromForgot");
-
-    const signinEmail = document.getElementById("signin-email");
-    const signinPassword = document.getElementById("signin-password");
-    const signinMsg = document.getElementById("signin-msg");
-    const signinBtn = document.getElementById("signin-btn");
-
-    const signupName = document.getElementById("signup-name");
-    const signupEmail = document.getElementById("signup-email");
-    const signupPassword = document.getElementById("signup-password");
-    const signupBtn = document.getElementById("signup-btn");
-    const signupMsg = document.getElementById("signup-msg");
-
-    const forgotInput = document.getElementById("forgot-input");
-    const forgotMsg = document.getElementById("forgot-msg");
-    const sendReset = document.getElementById("send-reset");
-
-    const toSignupLink = document.getElementById("toSignupLink");
-
-    // Helpers
-    function show(el){ el.classList.remove("hidden"); }
-    function hide(el){ el.classList.add("hidden"); }
-    function resetMessages(){ signinMsg.textContent=''; signupMsg.textContent=''; forgotMsg.textContent=''; }
-
-    // Navigation
-    toSignIn.onclick = () => { hide(choiceScreen); show(signinScreen); resetMessages(); }
-    toSignUp.onclick = () => { hide(choiceScreen); show(signupScreen); resetMessages(); }
-    backFromSignin.onclick = () => { hide(signinScreen); show(choiceScreen); }
-    backFromSignup.onclick = () => { hide(signupScreen); show(choiceScreen); }
-    backFromForgot.onclick = () => { hide(forgotScreen); show(signinScreen); }
-    document.getElementById("forgotBtn").onclick = () => { hide(signinScreen); show(forgotScreen); resetMessages(); }
-    toSignupLink.onclick = () => { hide(signinScreen); show(signupScreen); resetMessages(); }
-
-    // Generate publicId
-    function generatePublicId(prefix='PBMCQ', len=6){
-      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-      let s = '';
-      for (let i=0;i<len;i++) s += chars.charAt(Math.floor(Math.random()*chars.length));
-      return `${prefix}-${s}`;
-    }
-
-    // ---------- SIGN IN ----------
-    signinBtn.addEventListener("click", async () => {
-      resetMessages();
-      const email = signinEmail.value.trim();
-      const pw = signinPassword.value.trim();
-      if (!email || !pw) { signinMsg.textContent = 'Please enter email and password.'; return; }
-      try {
-        await signInWithEmailAndPassword(auth, email, pw);
-        location.href = 'index.html';
-      } catch (err) {
-        signinMsg.textContent = err.message;
-      }
-    });
-
-    // ---------- SIGN UP ----------
-    signupBtn.addEventListener('click', async () => {
-      resetMessages();
-      const name = signupName.value.trim();
-      const email = signupEmail.value.trim();
-      const pw = signupPassword.value.trim();
-      if (!name || !email || !pw) { signupMsg.textContent = 'All fields are required.'; return; }
-      if (pw.length < 6) { signupMsg.textContent = 'Password must be at least 6 characters.'; return; }
-
-      try {
-        const res = await createUserWithEmailAndPassword(auth, email, pw);
-        const user = res.user;
-        await updateProfile(user, { displayName: name });
-
-        let publicId;
-        while (true) {
-          publicId = generatePublicId();
-          const pDoc = await getDoc(doc(db, 'publicIds', publicId));
-          if (!pDoc.exists()) break;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - QB QUIZ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #000; 
+            color: white; 
+            overflow-x: hidden;
         }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        .input-field {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .input-field:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+            outline: none;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -10px rgba(59, 130, 246, 0.5);
+        }
+        /* Particle Background placeholder */
+        #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.4; }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen relative">
 
-        await setDoc(doc(db, 'users', user.uid), {
-          uid: user.uid,
-          name,
-          email,
-          publicId,
-          createdAt: serverTimestamp()
+    <canvas id="bg-canvas"></canvas>
+
+    <div class="w-full max-w-md p-6">
+        
+        <div id="auth-card" class="glass-panel rounded-2xl p-8 relative overflow-hidden">
+            
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
+                    QB QUIZ
+                </h1>
+                <p class="text-gray-400 text-sm mt-2">Secure Assessment Portal</p>
+            </div>
+
+            <div id="step-email" class="space-y-4">
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">Email Address</label>
+                    <input type="email" id="email-input" class="input-field w-full rounded-lg px-4 py-3" placeholder="mrdwarkesh65@gmail.com">
+                </div>
+                <button onclick="sendOTP()" class="btn-primary w-full py-3 rounded-lg font-semibold">
+                    Send Verification OTP
+                </button>
+                <div class="text-center mt-4">
+                    <p class="text-xs text-gray-500">OTP will be sent to verify your identity.</p>
+                </div>
+            </div>
+
+            <div id="step-otp" class="hidden space-y-4">
+                <div class="text-center mb-4">
+                    <p class="text-sm text-gray-300">Enter code sent to <span id="display-email" class="text-blue-400 font-mono"></span></p>
+                </div>
+                <div class="flex justify-between gap-2">
+                    <input type="text" id="otp-input" class="input-field w-full text-center text-2xl tracking-widest rounded-lg py-3" maxlength="6" placeholder="000000">
+                </div>
+                <button onclick="verifyOTP()" class="btn-primary w-full py-3 rounded-lg font-semibold">
+                    Verify OTP
+                </button>
+                <button onclick="resetToEmail()" class="w-full text-sm text-gray-400 hover:text-white mt-2">Change Email</button>
+            </div>
+
+            <div id="step-final" class="hidden space-y-4">
+                <div class="text-center text-green-400 mb-4 text-sm font-semibold">
+                    ✓ Email Verified
+                </div>
+                <div id="name-field-container" class="hidden">
+                    <label class="block text-sm text-gray-400 mb-1">Full Name</label>
+                    <input type="text" id="name-input" class="input-field w-full rounded-lg px-4 py-3" placeholder="Dwarkesh Savaliya">
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">Password</label>
+                    <input type="password" id="password-input" class="input-field w-full rounded-lg px-4 py-3" placeholder="••••••••">
+                </div>
+                <button id="action-btn" class="btn-primary w-full py-3 rounded-lg font-semibold">
+                    Secure Login
+                </button>
+                <div id="toggle-auth" class="text-center mt-4">
+                    <button onclick="toggleMode()" class="text-sm text-blue-400 hover:text-blue-300">
+                        New user? Create Account
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="module">
+        // --- FIREBASE CONFIG (YOURS) ---
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAA9WGhpWt5rfBsN0rIThp_Vd9gwwJlJwY",
+            authDomain: "website-mcq-5d390.firebaseapp.com",
+            projectId: "website-mcq-5d390",
+            storageBucket: "website-mcq-5d390.firebasestorage.app",
+            messagingSenderId: "792788612285",
+            appId: "1:792788612285:web:34f17eede0307ee65233d4",
+            measurementId: "G-Q1ZXF235FM"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // --- AUTH STATE CHECK ---
+        onAuthStateChanged(auth, (user) => {
+            if (user) window.location.href = "index.html";
         });
 
-        await setDoc(doc(db, 'publicIds', publicId), {
-          uid: user.uid,
-          name,
-          email,
-          createdAt: serverTimestamp()
+        // --- GLOBAL VARS ---
+        let currentOTP = null;
+        let isSignup = false;
+        
+        // --- UI FUNCTIONS ---
+        window.resetToEmail = () => {
+            gsap.to("#step-otp", {opacity:0, duration:0.3, onComplete: () => {
+                document.getElementById("step-otp").classList.add("hidden");
+                document.getElementById("step-email").classList.remove("hidden");
+                gsap.fromTo("#step-email", {opacity:0, x:-20}, {opacity:1, x:0});
+            }});
+        };
+
+        window.toggleMode = () => {
+            isSignup = !isSignup;
+            const toggleBtn = document.querySelector("#toggle-auth button");
+            const actionBtn = document.getElementById("action-btn");
+            const nameField = document.getElementById("name-field-container");
+
+            if (isSignup) {
+                nameField.classList.remove("hidden");
+                actionBtn.textContent = "Create Account";
+                toggleBtn.textContent = "Already have an account? Login";
+            } else {
+                nameField.classList.add("hidden");
+                actionBtn.textContent = "Secure Login";
+                toggleBtn.textContent = "New user? Create Account";
+            }
+        };
+
+        // --- OTP LOGIC (SIMULATED) ---
+        window.sendOTP = () => {
+            const email = document.getElementById("email-input").value;
+            if(!email.includes("@")) { alert("Please enter a valid email"); return; }
+
+            // GENERATE OTP
+            currentOTP = Math.floor(100000 + Math.random() * 900000).toString();
+            
+            // SIMULATE SENDING EMAIL (Since we are client-side only)
+            // In a real app, you would call your backend API here.
+            console.log(`Sending OTP to ${email} from mrdwarkesh65@gmail.com`);
+            
+            // DEMO ALERT
+            alert(`[DEMO] Email sent to ${email}.\nYour OTP is: ${currentOTP}`);
+
+            // UI TRANSITION
+            document.getElementById("display-email").textContent = email;
+            
+            gsap.to("#step-email", {opacity:0, x:-20, duration:0.3, onComplete: () => {
+                document.getElementById("step-email").classList.add("hidden");
+                document.getElementById("step-otp").classList.remove("hidden");
+                gsap.fromTo("#step-otp", {opacity:0, x:20}, {opacity:1, x:0});
+            }});
+        };
+
+        window.verifyOTP = () => {
+            const userOtp = document.getElementById("otp-input").value;
+            if (userOtp === currentOTP) {
+                // SUCCESS TRANSITION
+                gsap.to("#step-otp", {opacity:0, x:-20, duration:0.3, onComplete: () => {
+                    document.getElementById("step-otp").classList.add("hidden");
+                    document.getElementById("step-final").classList.remove("hidden");
+                    gsap.fromTo("#step-final", {opacity:0, x:20}, {opacity:1, x:0});
+                }});
+            } else {
+                alert("Invalid OTP. Please try again.");
+                document.getElementById("otp-input").value = "";
+            }
+        };
+
+        // --- FINAL LOGIN/SIGNUP ---
+        document.getElementById("action-btn").addEventListener("click", async () => {
+            const email = document.getElementById("email-input").value;
+            const password = document.getElementById("password-input").value;
+            const name = document.getElementById("name-input").value;
+
+            try {
+                if (isSignup) {
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    await updateProfile(userCredential.user, { displayName: name });
+                    
+                    // Save User to Firestore
+                    await setDoc(doc(db, "users", userCredential.user.uid), {
+                        name: name,
+                        email: email,
+                        createdAt: new Date()
+                    });
+                } else {
+                    await signInWithEmailAndPassword(auth, email, password);
+                }
+                // Redirect happens automatically via onAuthStateChanged
+            } catch (error) {
+                alert("Error: " + error.message);
+            }
         });
+        
+        // --- CANVAS BACKGROUND ---
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const stars = Array(100).fill().map(() => ({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: Math.random() * 2,
+            speed: Math.random() * 0.5
+        }));
 
-        signupMsg.classList.remove('text-red-500');
-        signupMsg.classList.add('text-green-600');
-        signupMsg.innerHTML = `Account created successfully!<br>Your User ID: <strong>${publicId}</strong>`;
-      } catch (err) {
-        signupMsg.textContent = err.message;
-      }
-    });
+        function animateBg() {
+            ctx.fillStyle = 'rgba(0,0,0,0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'white';
+            stars.forEach(star => {
+                star.y -= star.speed;
+                if(star.y < 0) star.y = canvas.height;
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            requestAnimationFrame(animateBg);
+        }
+        animateBg();
 
-    // ---------- FORGOT ----------
-    sendReset.addEventListener('click', async () => {
-      resetMessages();
-      const input = forgotInput.value.trim();
-      if (!input) { forgotMsg.textContent = 'Enter your email or User ID.'; return; }
-      try {
-        let emailToReset = input.includes('@')
-          ? input
-          : (await getDoc(doc(db, 'publicIds', input))).data()?.email;
-        if (!emailToReset) return forgotMsg.textContent = 'No account found.';
-        await sendPasswordResetEmail(auth, emailToReset);
-        forgotMsg.classList.remove('text-red-500');
-        forgotMsg.classList.add('text-green-600');
-        forgotMsg.textContent = `Password reset email sent to ${emailToReset}.`;
-      } catch (err) {
-        forgotMsg.textContent = err.message;
-      }
-    });
-
-    onAuthStateChanged(auth, (user) => {
-      if (user) location.href = 'index.html';
-    });
-  </script>
+    </script>
 </body>
 </html>
